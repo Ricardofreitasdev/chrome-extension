@@ -10,9 +10,7 @@ function getActiveTab() {
 function sendChromeMessage(action) {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve) => {
-    const tab = await getActiveTab();
-    const tabId = tab.id;
-    const tabUrl = tab.url;
+    const { id: tabId, url: tabUrl } = await getActiveTab();
 
     chrome.runtime.sendMessage({ tabId, tabUrl, action }, (response) => {
       resolve(response);
@@ -20,26 +18,9 @@ function sendChromeMessage(action) {
   });
 }
 
-export function getStoreData() {
-  return sendChromeMessage("getStoreData");
-}
-
-export function getStoreIntegrations() {
-  return sendChromeMessage("getStoreIntegrations");
-}
-
-export function getStorePerformance() {
-  return sendChromeMessage("getStorePerformance");
-}
-
-export function clearCache() {
-  return sendChromeMessage("clearCache");
-}
-
-export function layoutOff() {
-  return sendChromeMessage("layoutOff");
-}
-
-export function jsOff() {
-  return sendChromeMessage("jsOff");
-}
+export const getStoreData = () => sendChromeMessage("getStoreData");
+export const clearCache = () => sendChromeMessage("clearCache");
+export const layoutOff = () => sendChromeMessage("layoutOff");
+export const jsOff = () => sendChromeMessage("jsOff");
+export const getStoreIntegrations = () =>
+  sendChromeMessage("getStoreIntegrations");

@@ -10,59 +10,76 @@
         {{ tab }}
       </button>
     </div>
-    <div
-      v-for="(tab, index) in tabs"
-      v-show="activeTab === index"
-      :key="index"
-      class="tab-content"
-    >
-      <slot :name="tabName(index)" />
+    <div class="tab-area">
+      <div
+        v-for="(tab, index) in tabs"
+        :key="index"
+        :class="['tab-content', { 'tab-active': activeTab === index }]"
+        class="tab-content"
+      >
+        <slot :name="tabName(index)" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Tabs',
+  name: "Tabs",
   data() {
     return {
       activeTab: 0,
-      tabs: ['Loja', 'Ferramentas'],
-    }
+      tabs: ["Loja", "Ferramentas"],
+    };
   },
 
   methods: {
     tabName(index) {
-      return `tab-content-${index}`
+      return `tab-content-${index}`;
     },
   },
-}
+};
 </script>
 
-<style>
+<style lang="scss">
 .tab-buttons {
   display: flex;
 }
 .tab-buttons button {
-  background-color: #161b22;
-  color: #7d8590;
+  background-color: $bg-color;
+  color: $text-color;
   border: none;
-  border: 2px solid #21262d;
+  border: 2px solid $bg-color-2;
   padding: 16px 24px;
   cursor: pointer;
   flex: 1;
 }
 
 .tab-buttons button.active {
-  border-bottom: 2px solid #21262d;
+  border-bottom: 2px solid $bg-color-2;
   font-weight: bold;
-  color: #2f81f7;
+  color: $text-color-2;
+}
+
+.tab-area {
+  position: relative;
 }
 
 .tab-content {
-  padding: 16px;
-  background: #161b22;
-  border: 2px solid #21262d;
-  border-top: 0;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.5s;
+  transform: translateX(-50px);
+}
+
+.tab-content.tab-active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0%);
 }
 </style>

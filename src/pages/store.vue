@@ -7,14 +7,14 @@
           <b @click="copy(prop.value)">{{ limitString(prop.value) }}</b>
         </p>
       </div>
-      <hr>
+      <hr />
       <p class="item">
-        <a @click="removeTheme">Remover Tema (layoutOff)</a>
+        <a @click="removeTheme">Remover Tema</a>
       </p>
       <p class="item">
-        <a @click="removeExternalScripts">Remover scripts (jsOff)</a>
+        <a @click="removeExternalScripts">Remover Scripts Externos</a>
       </p>
-      <hr>
+      <hr />
       <p class="item">
         <a :href="sitemap" target="_blank">Sitemap</a>
       </p>
@@ -22,9 +22,7 @@
         <a :href="robots" target="_blank">Robots</a>
       </p>
     </div>
-    <div v-else>
-      Não parece ser uma loja tray
-    </div>
+    <div v-else>Não parece ser uma loja tray</div>
   </div>
 </template>
 
@@ -106,7 +104,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 code {
   font-family: monospace;
   font-size: 14px;
@@ -118,7 +116,7 @@ code {
   font-size: 14px;
 }
 hr {
-  border: 1px solid #21262d;
+  border: 1px solid $bg-color-2;
   margin: 10px 0;
 }
 

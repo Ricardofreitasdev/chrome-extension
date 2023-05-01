@@ -7,7 +7,9 @@ module.exports = {
   rules: {
     "no-console": "warn",
     "no-debugger": "warn",
-    'vue/multi-word-component-names': 'off',
+    "vue/multi-word-component-names": "off",
+    "vue/singleline-html-element-content-newline": "off",
+    "vue/html-self-closing": "off",
     "vue/max-attributes-per-line": [
       "error",
       {

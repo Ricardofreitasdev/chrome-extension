@@ -14,7 +14,8 @@
         href="https://github.com/Ricardofreitasdev"
         target="_blank"
         rel="noopener noreferrer"
-      >Developer</a>
+        >Developer</a
+      >
     </p>
   </div>
 </template>

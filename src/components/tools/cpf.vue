@@ -1,8 +1,6 @@
 <template>
   <div>
-    <button class="button" @click="gerarCPF">
-      Gerar CPF
-    </button>
+    <button class="button" @click="gerarCPF">Gerar CPF</button>
     <code v-if="cpf" @click="copy(cpf)">
       {{ cpf }}
     </code>
@@ -10,53 +8,53 @@
 </template>
 
 <script>
-import { utils } from '../../mixin/utils'
+import { utils } from "../../mixin/utils";
 export default {
-  name: 'AppBuildCpf',
+  name: "AppBuildCpf",
   mixins: [utils],
   data() {
     return {
-      cpf: '',
-    }
+      cpf: "",
+    };
   },
   methods: {
     gerarCPF() {
-      const n = 9
+      const n = 9;
       const cpfDigits = Array.from({ length: n }, () =>
         Math.floor(Math.random() * 10)
-      )
+      );
 
-      const dv1 = this.calcularDigitoVerificador(cpfDigits, n + 1)
-      cpfDigits.push(dv1)
+      const dv1 = this.calcularDigitoVerificador(cpfDigits, n + 1);
+      cpfDigits.push(dv1);
 
-      const dv2 = this.calcularDigitoVerificador(cpfDigits, n + 2)
-      cpfDigits.push(dv2)
+      const dv2 = this.calcularDigitoVerificador(cpfDigits, n + 2);
+      cpfDigits.push(dv2);
 
-      const cpf = cpfDigits.join('')
+      const cpf = cpfDigits.join("");
 
-      this.cpf = cpf
+      this.cpf = cpf;
     },
 
     calcularDigitoVerificador(digits, weight) {
       const sum = digits.reduce(
         (acc, digit, index) => acc + digit * (weight - index),
         0
-      )
-      const mod = sum % 11
-      const dv = mod < 2 ? 0 : 11 - mod
+      );
+      const mod = sum % 11;
+      const dv = mod < 2 ? 0 : 11 - mod;
 
-      return dv
+      return dv;
     },
   },
-}
+};
 </script>
 
 <style lang="scss">
 .button {
-  background: #21262d;
+  background: $bg-color-2;
   border: none;
   padding: 8px;
-  color: #7d8590;
+  color: $text-color;
   cursor: pointer;
   border-radius: 4px;
   transition: ease-in-out 0.3s;

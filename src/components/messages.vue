@@ -5,41 +5,40 @@
 </template>
 
 <script>
-import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
-  name: 'AppMessages',
+  name: "AppMessages",
   setup() {
-    const store = useStore()
-    const notification = computed(() => store.state.notification)
+    const store = useStore();
+    const notification = computed(() => store.state.notification);
     return {
       notification,
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss">
 .messages {
   font-size: 14px;
-  display: flex;
   text-align: center;
   background: #0d1117;
   opacity: 0.95;
-  height: 100%;
   width: 100%;
-  position: absolute;
+  position: fixed;
   left: 0;
-  top: 0;
+  bottom: 5px;
   z-index: 1;
+  padding: 10px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   &:not(:empty) {
-    margin: 10px 0;
+    margin: 0;
   }
 }
 </style>
