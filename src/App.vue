@@ -7,22 +7,18 @@
       <template #tab-content-1>
         <Settings />
       </template>
+      <template #tab-content-2>
+        <Dev />
+      </template>
     </Tabs>
     <Messages />
-    <p class="dev">
-      <a
-        href="https://github.com/Ricardofreitasdev"
-        target="_blank"
-        rel="noopener noreferrer"
-        >Developer</a
-      >
-    </p>
   </div>
 </template>
 
 <script>
 import Tabs from "./components/tabs.vue";
 import Store from "./pages/store.vue";
+import Dev from "./pages/dev.vue";
 import Settings from "./pages/settings.vue";
 import Messages from "./components/messages.vue";
 
@@ -32,6 +28,7 @@ export default {
     Store,
     Settings,
     Messages,
+    Dev,
   },
 };
 </script>
@@ -50,7 +47,7 @@ export default {
 
 .dev {
   text-align: center;
-  font-size: 12px;
+  font-size: 10px;
   bottom: 5px;
   left: 50%;
   transform: translate(-50%, -50%);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isTray">
+    <div v-if="isTray" class="container">
       <div v-for="(prop, key) in store" :key="key" class="item">
         <p v-if="prop.value">
           {{ prop.label }}:
@@ -15,19 +15,14 @@
         <a @click="removeExternalScripts">Remover Scripts Externos</a>
       </p>
       <hr />
-      <p class="item">
-        <a :href="sitemap" target="_blank">Sitemap</a>
-      </p>
-      <p class="item">
-        <a :href="robots" target="_blank">Robots</a>
-      </p>
+      <app-history />
     </div>
     <div v-else>Não parece ser uma loja tray</div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import {
   getStoreData,
   getStoreIntegrations,
@@ -36,9 +31,13 @@ import {
 } from "../google/browser";
 import { utils } from "../mixin/utils";
 import { useStore } from "vuex";
+import AppHistory from "../components/tools/history.vue";
 
 export default {
   name: "Store",
+  components: {
+    AppHistory,
+  },
   mixins: [utils],
 
   setup() {
@@ -52,7 +51,7 @@ export default {
       const storeIntegrations = await getStoreIntegrations();
 
       store.value = {
-        id: { value: storeData.id, label: "loja" },
+        id: { value: storeData.id, label: "Loja" },
         session: { value: storeData.session, label: "Sessão" },
         gtm: { value: storeIntegrations.gtm, label: "Gtm" },
         ga4: { value: storeIntegrations.analyticsGa4, label: "Ga4" },
@@ -62,14 +61,6 @@ export default {
 
       url.value = storeData.url;
       isTray.value = storeData.isTray;
-    });
-
-    const sitemap = computed(() => {
-      return `${url.value}/sitemap.xml`;
-    });
-
-    const robots = computed(() => {
-      return `${url.value}/robots.txt`;
     });
 
     const limitString = (text) => {
@@ -93,8 +84,6 @@ export default {
 
     return {
       store,
-      sitemap,
-      robots,
       isTray,
       limitString,
       removeTheme,
@@ -112,7 +101,7 @@ code {
 }
 
 .item {
-  margin: 5px 0;
+  margin-bottom: 5px;
   font-size: 14px;
 }
 hr {

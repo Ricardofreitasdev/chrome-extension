@@ -1,9 +1,9 @@
 <template>
   <div>
     <app-build-cpf />
-    <hr>
+    <hr />
     <app-clear-cache />
-    <hr>
+    <hr />
     <app-external-links />
   </div>
 </template>

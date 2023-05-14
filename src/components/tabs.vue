@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       activeTab: 0,
-      tabs: ["Loja", "Ferramentas"],
+      tabs: ["Loja", "Ferramentas", "Dev"],
     };
   },
 
@@ -50,7 +50,7 @@ export default {
   color: $text-color;
   border: none;
   border: 2px solid $bg-color-2;
-  padding: 16px 24px;
+  padding: 16px 16px;
   cursor: pointer;
   flex: 1;
 }

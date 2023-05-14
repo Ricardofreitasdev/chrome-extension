@@ -1,6 +1,9 @@
 import {
+  changeUrl,
+  getHistory,
   removeExternalJsFromUrl,
   removeLayoutByParam,
+  setHistory,
   storeDataByHtml,
   storeIntegrationsByHtml,
 } from "./actions/scripts.js";
@@ -12,8 +15,14 @@ export const getStoreData = (message, sendResponse) => {
       target: { tabId: message.tabId },
       func: storeDataByHtml,
     },
-    function (result) {
-      sendResponse(result[0].result);
+    async function (result) {
+      const response = result[0].result;
+
+      if (response.isTray) {
+        await setHistory(response);
+      }
+
+      sendResponse(response);
     }
   );
 };
@@ -58,6 +67,24 @@ export const jsOff = (message, sendResponse) => {
   });
 };
 
+export const getStoreHistory = async (message, sendResponse) => {
+  const response = await getHistory();
+  sendResponse(response);
+};
+
+export const changeEnvironment = async (message, sendResponse) => {
+  const { tabId } = message;
+  const response = changeUrl(message.data);
+
+  if (response.message.error) {
+    sendResponse(response.message.error);
+    return;
+  }
+
+  chrome.tabs.update(tabId, { url: response.newUrl }, function () {
+    sendResponse(response.message.success);
+  });
+};
 export const clearCache = (message, sendResponse) => {
   chrome.browsingData.remove(
     {
@@ -68,14 +95,14 @@ export const clearCache = (message, sendResponse) => {
       },
     },
     {
-      cacheStorage: true,
+      cacheStorage: false,
       cookies: true,
-      fileSystems: true,
-      indexedDB: true,
+      fileSystems: false,
+      indexedDB: false,
       localStorage: true,
     },
     function () {
-      sendResponse("Cache limpo com sucesso!");
+      sendResponse("Storage limpo com sucesso!");
     }
   );
 };

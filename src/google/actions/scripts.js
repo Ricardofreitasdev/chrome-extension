@@ -50,6 +50,45 @@ export const removeLayoutByParam = (url) => {
   return { newUrl, message };
 };
 
+export const changeUrl = ({ currentUrl, environment }) => {
+  const DEV = "http://dev.checkout.com.br";
+  const TMK = "https://easycheckout-tmk.tray.com.br";
+
+  const message = {
+    error: "",
+    success: "Ambiente atualizado com sucesso!",
+  };
+
+  let newUrl = currentUrl;
+
+  if (!currentUrl.includes("checkout")) {
+    message.error = "Não é possível aplicar o ambiente nessa página";
+    return { newUrl: null, message };
+  }
+
+  if (environment === "com1") {
+    newUrl = currentUrl.replace("checkout", "com1-checkout");
+  }
+
+  if (environment === "com2") {
+    newUrl = currentUrl.replace("checkout", "com2-checkout");
+  }
+
+  if (environment === "exc2") {
+    newUrl = currentUrl.replace("checkout", "exc2-checkout");
+  }
+
+  if (environment === "dev") {
+    newUrl = currentUrl.replace(/^https?:\/\/[^/]+/, DEV);
+  }
+
+  if (environment === "tmk") {
+    newUrl = currentUrl.replace(/^https?:\/\/[^/]+/, TMK);
+  }
+
+  return { newUrl, message };
+};
+
 export const storeDataByHtml = () => {
   const trayCopy = document.querySelector('meta[name="copyright"]');
   const html = document.querySelector("html");
@@ -121,3 +160,58 @@ function addParamToUrl(url, param) {
   const separator = url.includes("?") ? "&" : "?";
   return `${url}${separator}${param}`;
 }
+
+export const getHistory = async () => {
+  const { history } = await new Promise((resolve, reject) => {
+    chrome.storage.local.get("history", (data) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+  return history;
+};
+
+export const setHistory = async (data) => {
+  await new Promise((resolve, reject) => {
+    const storageData = {
+      id: data.id,
+      url: data.url,
+    };
+
+    getHistory()
+      .then((currentHistory) => {
+        if (!currentHistory) {
+          currentHistory = [];
+        }
+
+        if (currentHistory.some((item) => item.id === storageData.id)) {
+          return;
+        }
+
+        currentHistory.push(storageData);
+
+        if (currentHistory.length > 4) {
+          currentHistory.shift();
+        }
+
+        chrome.storage.local.set({ history: currentHistory }, () => {
+          resolve();
+        });
+      })
+      .catch((error) => {
+        reject(error);
+      })
+      .finally(() => {
+        resolve();
+      });
+  });
+};
+
+export const clearStorage = () => {
+  chrome.storage.local.clear(() => {
+    return "Armazenamento limpo com sucesso!";
+  });
+};

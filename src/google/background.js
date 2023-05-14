@@ -4,6 +4,8 @@ import {
   getStoreIntegrations,
   jsOff,
   layoutOff,
+  getStoreHistory,
+  changeEnvironment,
 } from "./extension.js";
 
 // eslint-disable-next-line no-undef
@@ -14,6 +16,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     layoutOff,
     jsOff,
     clearCache,
+    getStoreHistory,
+    changeEnvironment,
   };
 
   const action = actions[message.action];
