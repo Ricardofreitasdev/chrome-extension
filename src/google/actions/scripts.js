@@ -53,6 +53,21 @@ export const removeLayoutByParam = (url) => {
 export const changeUrl = ({ currentUrl, environment }) => {
   const DEV = "http://dev.checkout.com.br";
   const TMK = "https://easycheckout-tmk.tray.com.br";
+  const DEVCENTRAL = "http://localhost:8001";
+  const TMKCENTRAL = "https://central-tmk.tray.com.br";
+
+  const environmentToUrlMapping = {
+    com1: (url) => url.replace("checkout", "com1-checkout"),
+    com2: (url) => url.replace("checkout", "com2-checkout"),
+    exc2: (url) => url.replace("checkout", "exc2-checkout"),
+    stg1: (url) => url.replace("my-account", "stg1-my-account"),
+    stg2: (url) => url.replace("my-account", "stg2-my-account"),
+    stg3: (url) => url.replace("my-account", "stg3-my-account"),
+    dev: (url) => url.replace(/^https?:\/\/[^/]+/, DEV),
+    tmk: (url) => url.replace(/^https?:\/\/[^/]+/, TMK),
+    devCentral: (url) => url.replace(/^https?:\/\/[^/]+/, DEVCENTRAL),
+    tmkCentral: (url) => url.replace(/^https?:\/\/[^/]+/, TMKCENTRAL),
+  };
 
   const message = {
     error: "",
@@ -61,32 +76,22 @@ export const changeUrl = ({ currentUrl, environment }) => {
 
   let newUrl = currentUrl;
 
-  if (!currentUrl.includes("checkout")) {
-    message.error = "Não é possível aplicar o ambiente nessa página";
-    return { newUrl: null, message };
+  if (currentUrl.includes("checkout")) {
+    const urlMappingFunction = environmentToUrlMapping[environment];
+    newUrl = urlMappingFunction(currentUrl);
+
+    return { newUrl, message };
   }
 
-  if (environment === "com1") {
-    newUrl = currentUrl.replace("checkout", "com1-checkout");
+  if (currentUrl.includes("my-account")) {
+    const urlMappingFunction = environmentToUrlMapping[environment];
+    newUrl = urlMappingFunction(currentUrl);
+
+    return { newUrl, message };
   }
 
-  if (environment === "com2") {
-    newUrl = currentUrl.replace("checkout", "com2-checkout");
-  }
-
-  if (environment === "exc2") {
-    newUrl = currentUrl.replace("checkout", "exc2-checkout");
-  }
-
-  if (environment === "dev") {
-    newUrl = currentUrl.replace(/^https?:\/\/[^/]+/, DEV);
-  }
-
-  if (environment === "tmk") {
-    newUrl = currentUrl.replace(/^https?:\/\/[^/]+/, TMK);
-  }
-
-  return { newUrl, message };
+  message.error = "Não é possível aplicar o ambiente nessa página";
+  return { newUrl: null, message };
 };
 
 export const storeDataByHtml = () => {
@@ -156,11 +161,6 @@ export const storeIntegrationsByHtml = () => {
   return integrations;
 };
 
-function addParamToUrl(url, param) {
-  const separator = url.includes("?") ? "&" : "?";
-  return `${url}${separator}${param}`;
-}
-
 export const getHistory = async () => {
   const { history } = await new Promise((resolve, reject) => {
     chrome.storage.local.get("history", (data) => {
@@ -215,3 +215,8 @@ export const clearStorage = () => {
     return "Armazenamento limpo com sucesso!";
   });
 };
+
+function addParamToUrl(url, param) {
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}${param}`;
+}

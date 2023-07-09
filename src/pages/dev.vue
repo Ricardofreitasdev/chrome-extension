@@ -1,58 +1,75 @@
 <template>
-  <h3>EasyCheckout Ambientes</h3>
-  <p class="item">
-    <a @click="changeUrl('dev')">Desenvolvimento</a>
-  </p>
-  <p class="item">
-    <a @click="changeUrl('tmk')">TMK</a>
-  </p>
-  <hr />
-  <p class="item">
-    <a @click="changeUrl('com1')">Commerce 1</a>
-  </p>
-  <p class="item">
-    <a @click="changeUrl('com2')">Commerce 2</a>
-  </p>
-  <p class="item">
-    <a @click="changeUrl('exc2')">Exclusive</a>
-  </p>
+  <div v-if="isEasy">
+    <h3>EasyCheckout Ambientes</h3>
+    <hr />
+    <app-environment-link
+      v-for="easy in urlsEasy"
+      :key="easy.environment"
+      :environment="easy.environment"
+      :text="easy.text"
+    />
+  </div>
+  <div v-else-if="isCentral">
+    <h3>Central Ambientes</h3>
+    <hr />
+    <app-environment-link
+      v-for="central in urlsCentral"
+      :key="central.environment"
+      :environment="central.environment"
+      :text="central.text"
+    />
+  </div>
+  <div v-else>Não existem recursos de dev nessa pagina</div>
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
-import { changeEnvironment, getStoreData } from "../google/browser";
-import { useStore } from "vuex";
+import { computed, onMounted, reactive, ref } from "vue";
+import { getStoreData } from "../google/browser";
+import AppEnvironmentLink from "../components/environment-link.vue";
 export default {
   name: "Dev",
-  components: {},
+  components: {
+    AppEnvironmentLink,
+  },
 
   setup() {
     const currentUrl = ref("");
-    const vuex = useStore();
+
+    const urlsEasy = reactive([
+      { environment: "dev", text: "Desenvolvimento" },
+      { environment: "tmk", text: "TMK" },
+      { environment: "com1", text: "Commerce 1" },
+      { environment: "com2", text: "Commerce 2" },
+      { environment: "exc2", text: "Exclusive" },
+    ]);
+
+    const urlsCentral = reactive([
+      { environment: "devCentral", text: "Desenvolvimento" },
+      { environment: "tmkCentral", text: "TMK" },
+      { environment: "stg1", text: "Staging 1" },
+      { environment: "stg2", text: "Staging 2" },
+      { environment: "stg3", text: "Staging 3" },
+    ]);
 
     onMounted(async () => {
       const storeData = await getStoreData();
       currentUrl.value = storeData.currentUrl;
     });
 
-    const changeUrl = async (env) => {
-      const response = await changeEnvironment({
-        currentUrl: currentUrl.value,
-        environment: env,
-      });
-
-      vuex.commit("setNotification", response);
-    };
+    const isCentral = computed(() => currentUrl.value.includes("my-account"));
+    const isEasy = computed(() => currentUrl.value.includes("checkout"));
 
     return {
-      changeUrl,
-      currentUrl,
+      urlsEasy,
+      urlsCentral,
+      isCentral,
+      isEasy,
     };
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 h3 {
   margin-bottom: 15px;
 }

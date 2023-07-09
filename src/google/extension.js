@@ -85,6 +85,7 @@ export const changeEnvironment = async (message, sendResponse) => {
     sendResponse(response.message.success);
   });
 };
+
 export const clearCache = (message, sendResponse) => {
   chrome.browsingData.remove(
     {
